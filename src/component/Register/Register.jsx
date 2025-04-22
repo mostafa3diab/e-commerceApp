@@ -3,8 +3,12 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+// import { useContext } from "react";
+// import { CounterContext } from "../../context/counterContext";
 
 export default function Register() {
+  // let x = useContext(CounterContext);    //context
+
   let navigate = useNavigate();
   async function handleRegister(formsData) {
     console.log("register", formsData); //faten email
