@@ -8,18 +8,42 @@ import Brands from "./component/Brands/Brands";
 import Carts from "./component/Carts/Carts";
 import Notfound from "./component/Notfound/Notfound";
 import CounterContextProvider from "./context/counterContext";
-// import { counterContext } from "./context/counterContext";
+import UserContextProvider from "./context/userContext";
+import ProductedRoutes from "./component/ProductedRoutes/ProductedRoutes";
+import ProductDetails from "./component/ProductDetails/ProductDetails";
 
 let routers = createBrowserRouter([
   {
     path: "",
     element: <Layout />,
     children: [
-      { index: true, element: <Products /> },
+      {
+        index: true,
+        element: (
+          <ProductedRoutes>
+            <Products />
+          </ProductedRoutes>
+        ),
+      },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-      { path: "brands", element: <Brands /> },
-      { path: "carts", element: <Carts /> },
+      {
+        path: "brands",
+        element: (
+          <ProductedRoutes>
+            <Brands />
+          </ProductedRoutes>
+        ),
+      },
+      {
+        path: "carts",
+        element: (
+          <ProductedRoutes>
+            <Carts />
+          </ProductedRoutes>
+        ),
+      },
+      { path: "productDetails/:id", element: <ProductDetails /> },
       { path: "*", element: <Notfound /> },
     ],
   },
@@ -28,9 +52,11 @@ let routers = createBrowserRouter([
 function App() {
   return (
     <>
-      <CounterContextProvider>
-        <RouterProvider router={routers}></RouterProvider>
-      </CounterContextProvider>
+      <UserContextProvider>
+        <CounterContextProvider>
+          <RouterProvider router={routers}></RouterProvider>
+        </CounterContextProvider>
+      </UserContextProvider>
     </>
   );
 }

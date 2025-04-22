@@ -2,8 +2,12 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { userContext } from "../../context/userContext";
+import { useContext } from "react";
 
 export default function Login() {
+  let { isLogin, setLogin } = useContext(userContext);
+
   let navigate = useNavigate();
   async function handleLogin(formsData) {
     console.log("login", formsData);
@@ -12,6 +16,9 @@ export default function Login() {
       .then((response) => {
         console.log("success", response);
         if (response.data.message === "success") {
+          localStorage.setItem("userToken", response.data.token);
+          setLogin(response.data.token);
+          console.log(isLogin);
           navigate("/"); //programmatic routing
         }
       })
@@ -28,7 +35,10 @@ export default function Login() {
       .email("enter valid email"), //check on email
     password: Yup.string()
       .required("password is required")
-      .matches(/^[A-Z][a-z0-9]{6,8}$/, "password is not valid"),
+      .matches(
+        /^[A-Z](?=.*[!@#$%])[a-z0-9!@#$%]{6,24}$/,
+        "password is not valid"
+      ),
   });
 
   let formik = useFormik({
@@ -61,6 +71,7 @@ export default function Login() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             type="email"
+                            autoComplete="on"
                             className={`form-control ${
                               formik.touched.email && formik.errors.email
                                 ? "is-invalid"
@@ -88,6 +99,7 @@ export default function Login() {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             type="password"
+                            autoComplete="on"
                             className={`form-control ${
                               formik.touched.password && formik.errors.password
                                 ? "is-invalid"
